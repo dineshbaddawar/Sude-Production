@@ -1,0 +1,40 @@
+<aura:component  implements="force:appHostable,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:actionOverride" access="global" controller="CustomCloneAuraHelper" >
+    <aura:attribute name="myMap" type="Map" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+     <aura:attribute name="recordId" type="String"/>
+     <aura:html tag="style">
+        .slds-modal__container{
+        max-width: 80rem !important;
+        width:80% !important;
+        }
+    </aura:html>
+    <lightning:card class="slds-p-around_medium">
+        <lightning:recordEditForm aura:id="recordEditForm" recordId="{!v.recordId}" objectApiName="Product2" onerror="{!c.handleError}"  onsuccess="{!c.handleOnSuccess}">
+            <lightning:messages />
+            <h2 style="text-align:center;font-size:16px;font-family: Noto Sans,Helvetica,sans-serif;">
+                <b>UPDATE RECORD</b>
+                <hr style="width:100%;text-align:left;margin-left:0"/>
+            </h2>
+            <aura:iteration items="{!v.myMap}"  var="mapKey" indexVar="key">  
+                <div class="slds-page-header">
+                    <div class="slds-page-header__row">
+                        <div class="slds-page-header__name-title">
+                            <h2>
+                                <span class=" slds-truncate"><b>{!mapKey.key}</b> </span>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+                <aura:iteration items="{!mapKey.value}" var="mapValue">
+                    <lightning:inputField fieldName="{!mapValue}"/>
+                    <lightning:inputField fieldName="{!mapValue.key}" value="{!mapValue.value}" />
+                </aura:iteration>
+            </aura:iteration>
+            <div slot="footer" class="slds-align_absolute-center slds-m-top_x-small footer-container" >
+                <lightning:button onclick="{!c.CancelEdit}" variant="neutral" class="footer-button" label="Cancel"></lightning:button>
+                <lightning:button variant="brand" type="submit"  label="Save"  class="slds-m-left_x-small"></lightning:button>
+            </div>
+        </lightning:recordEditForm>
+    </lightning:card>
+
+</aura:component>

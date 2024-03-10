@@ -1,0 +1,357 @@
+<apex:page renderAs="pdf"  standardController="Quote" showHeader="false" sidebar="false"  extensions="SudeBLRSheetController"  applyHtmlTag="false" applyBodyTag="false" >
+    <head>
+        <style>
+            @page {
+            margin-top: 1.5cm;
+            margin-left: 0.5cm;
+            margin-right: 0cm;                        
+            background-image: url('https://sudeengg--util--c.sandbox.vf.force.com/resource/1673873517000/Watermark?');
+            background-repeat: no-repeat;
+            background-position: center;
+            }
+        </style>
+    </head>
+    <apex:stylesheet value="{!$Resource.PDF}"/>
+    <body>
+        <div class="footer">
+            <hr style="border-top: 1px solid #20B2AA;" />  
+            <div class="number">Page <span class="pagenumber"/> of <span class="pagecount"/></div>
+        </div>   
+        
+        <div style="display: inline-block;width: 100%;margin: 1rem;padding: 2rem 2rem;padding-top:10px;font-family: Noto Sans,Helvetica,sans-serif;margin-left: 30px;">
+            <div style="display: inline-block;padding: 2rem 2rem;vertical-align: middle;float:left;width:50%">
+                <apex:image url="{!$Resource.SudeImage}" width="120" height="60" /><br/>   
+            </div>
+            <div style="display: inline-block;padding: 2rem 2rem;vertical-align: middle;float:left;width:50%;color:#13928d;font-size:20px;">
+                <b>Q&nbsp;&nbsp;U&nbsp;&nbsp;O&nbsp;&nbsp;T&nbsp;&nbsp;A&nbsp;T&nbsp;&nbsp;&nbsp;I&nbsp;&nbsp;O&nbsp;&nbsp;N</b>   
+            </div>
+        </div>
+        
+        <div style="display: inline-block;width: 100%;margin: 1rem;padding: 2rem 2rem;padding-top:10px;font-family: Noto Sans,Helvetica,sans-serif;margin-left: 30px;margin-right:30px;">
+            <div style="display: inline-block;padding: 2rem 2rem;vertical-align: middle;float:left;width:50%">
+                <span Style="color:#949699;font-size:20px;"><b>Quotation to</b></span><br/>
+                <b Style="color:#13928d">{!accData.Name}</b><br/>
+                <span style="color:#606060">{!quoteData.BillingStreet},</span><br/>
+                <span style="color:#606060">{!quoteData.BillingCity}</span>
+                <span style="color:#606060">{!quoteData.BillingPostalCode} - </span>
+                <span style="color:#606060">{!quoteData.BillingState}</span><br/>
+                <span style="color:#606060">{!quoteData.BillingCountry}</span><br/><br/>
+                <br/>
+            </div>
+            <div style="display: inline-block;padding: 2rem 2rem;vertical-align: middle;float:left;width:50%">
+                <b Style="color:#949699;font-size:20px;">Sude Engineering Private Limited </b><br/>
+                <br/>
+                <span style="color:#606060">
+                    Plot Number 67 &amp; 68,  <br/>
+                    Near Government ITI College, Magadi Road, <br/>  
+                    Seegehalli, BMTC Depot Road, <br/>
+                    Bangalore - 560112
+                </span>
+                <br/>
+                <span style="color:#606060">
+                    <b>Phone	: </b>{!compDetails.Contact__c}<br/>
+                    <b>Tel No		: </b>{!compDetails.Fax__c}<br/>
+                    <b>E-mail	: </b>{!compDetails.Email__c}, sude@sudeengg.com <br/>
+                    <b>Website 	: </b>{!compDetails.Website__c}
+                </span>
+            </div>
+        </div>
+        
+        <div style="display: inline-block;width: 100%;margin: 1rem;padding: 2rem 2rem;padding-top:10px;font-family: Noto Sans,Helvetica,sans-serif;margin-left: 30px;margin-right:30px;">
+            <div style="display: inline-block;padding: 2rem 2rem;vertical-align: middle;float:left;width:45%;border: 2px solid black;">
+                <b>SUBJECT TO BANGALORE JURISDICTION</b>
+            </div>
+        </div>
+        
+        <div style="color:#606060;display: inline-block;width: 100%;margin: 1rem;padding: 2rem 2rem;padding-top:10px;font-family: Noto Sans,Helvetica,sans-serif;margin-left: 30px;margin-right:30px;">
+            <div style="display: inline-block;padding: 2rem 2rem;vertical-align: middle;float:left;width:50%">
+                <b>Quotation No</b> :{!resultString}<br/>
+                <apex:outputText rendered="{!oppData.Actuator_Motor__c !=null }">
+                    <b>Enquiry No</b> : {!oppData.Actuator_Motor__c}
+                </apex:outputText>
+            </div>
+            <div style="display: inline-block;padding: 2rem 2rem;vertical-align: middle;float:left;width:50%">
+                <b>Date</b> : <span style="color:#606060;">
+                <apex:outputText value="{0,date,dd-' 'MMMMM-' 'yyyy}" style="color:#606060;font-size: 14.5px;">
+                    <apex:param value="{!quoteData.createdDate}"  /> 
+                </apex:outputText>
+                </span>
+            </div>
+        </div>
+        <br/>
+        
+        <div class="content"> 
+            <div style="color: #20B2AA;">
+                <hr style="border-top: 1px solid #20B2AA;margin-left: 30px;margin-right:30px;" />  
+            </div>
+            <!-- Div For Dear sir/Madam-->
+            <div style="margin-left: 30px;margin-right:30px;font-family: Noto Sans,Helvetica,sans-serif;">
+                <div style="color: #13928d; font-size: 16px; text-align: center;"><b>Attn:</b>
+                    <span style="color: #606060;font-size: 14.5px">{!quoteData.Contact.Name}</span>
+                </div><br/>
+                <p style="text-align:left;margin-top: 0px;color:#13928d;">
+                    <span style="color:#13928d;font-size: 16px;"><b>Dear Sir/Madam,</b>  </span><br/><br/>
+                    <span style="color: #606060;font-size: 14.5px"> 
+                        <apex:outputText value="{!quoteData.Customer_Body__c}" escape="false"> 
+                        </apex:outputText>
+                    </span><br/><br/>
+                </p>
+            </div>
+            
+            <!-- Div for Product Details Start --->
+            <div style="font-family: Noto Sans,Helvetica,sans-serif;">
+                <table border="1" style="width: 100%;border: 0px solid #20B2AA;text-align:center;-fs-table-paginate: paginate;">
+                    <tr >
+                        <th style="font-size:13px;width:5%;border-color: #20B2AA;border: 1px solid #20B2AA; word-wrap: break-word;color : #606060;">No.</th>
+                        <th style="font-size:13px;width:25%;border-color: #20B2AA;border: 1px solid #20B2AA; word-wrap: break-word;color : #606060;">Product Details</th>
+                        <th style="font-size:13px;width:40%;border-color: #20B2AA;border: 1px solid #20B2AA; word-wrap: break-word;color : #606060;">Model Number </th>
+                        <th style="font-size:13px;width:10%;border-color: #20B2AA;border: 1px solid #20B2AA; word-wrap: break-word;color : #606060;">QTY</th>
+                        <th style="font-size:13px;width:20%;border-color: #20B2AA;border: 1px solid #20B2AA;word-wrap: break-word;color : #606060; ">Unit Price(INR)</th>
+                    </tr>
+                    <apex:variable var="index" value="{!0}"/>
+                    <apex:repeat value="{!prodLineItem}" var="lineItems">
+                        <tr class='item-details' colspan="" >
+                            <apex:variable var="index" value="{!(index+1)}"/>
+                            <td style="width:5%;padding-top:10px;border-color: #20B2AA; word-wrap: break-all;  inline-size: 5%;color : #606060;"><apex:outputText value="{!index}"/></td> 
+                            <td style="text-align:center;padding-left:10px;padding right:10px;padding-top:5px;border-color:  #20B2AA;word-wrap: break-all;  inline-size: 25%; width:30%;color : #606060;">{!lineItems.Product2.Name}<br/></td> <!-- {!lineItems.Product2.Name} -->
+                            <td style="text-align:center;padding-left:10px;padding right:10px;border-color: #20B2AA;padding-top:0px; word-wrap: break-all;  inline-size: 25%; width:30%;color : #606060;padding-bottom:5px;"><br/>  {!lineItems.Product2.Product_Name__c}<br/></td> <!--{!lineItems.Product2.Model_Number__c}  -->
+                            <td style="text-align:center;padding-top:10px;border-color: #20B2AA; word-wrap: break-all; overflow-wrap: break-word; width:10%; word-wrap: break-all;  inline-size: 10%;color : #606060;">
+                                <apex:outputText value="{0, number, 0}">
+                                    <apex:param value="{!lineItems.Quantity}" />
+                                </apex:outputText> 
+                            </td>
+                            <td style="text-align: center;padding-top:10px;border-color: #20B2AA; word-wrap: break-word; width:25%; word-wrap: break-all;  inline-size: 15%;color : #606060;font-size: 16px;">
+                                <apex:image url="{!$Resource.RupeeSign1}" width="8" height="12" />
+                                <apex:outputText value="{0, number, ##,##,##}">
+                                    <apex:param value="{!VALUE(IF( LEN(TEXT(lineItems.UnitPrice)) > 3,LEFT(TEXT(lineItems.UnitPrice), LEN(TEXT(lineItems.UnitPrice))-3),''))}"  />
+                                </apex:outputText>
+                                <apex:outputText rendered="{!( LEN(TEXT(lineItems.UnitPrice))) > 3 }">,</apex:outputText>
+                                <apex:outputText value="{!IF( LEN(TEXT(lineItems.UnitPrice)) > 3,RIGHT(TEXT(lineItems.UnitPrice), 3),TEXT(lineItems.UnitPrice))}" > 
+                                </apex:outputText>
+                                
+                                <!--apex:outputText value="{!Text(lineItems.UnitPrice)}">     
+{!LEN(TEXT(lineItems.UnitPrice))}   value="{0, number,##,##,###}"
+</apex:outputText-->
+                                <!--apex:outputText value="{!IF( lineItems.UnitPrice!=null,TEXT({!LEN(lineItems.UnitPrice)} ),'')}" >  
+##,##,##,##,##  <apex:param value=" "/>
+
+</apex:outputText-->
+                                
+                                <!--<apex:image url="{!$Resource.RupeeSign1}" width="10" height="12" />  {!unitPriceFormatted} -->
+                            </td> 
+                        </tr>
+                    </apex:repeat>
+                    
+                    <tr  style="border: 1px solid #20B2AA;"> 
+                        <td colspan="3" style="border:solid 0.1px #777;padding:2px; width:75%;border-color: #20B2AA;border: 1px solid #20B2AA;font-size: 13px;padding-left: 380px;color : #606060;"><b> Subtotal</b> </td>
+                        <td style="border:solid 1px #777;padding:2px; width:10%;border-color: #20B2AA;border: 1px solid #20B2AA;color : #606060;"></td> 
+                        <td style="border:solid 1px #777;padding:2px; width: 15%;border-color: #20B2AA;border: 1px solid #20B2AA;color : #606060;">
+                            <apex:image url="{!$Resource.RupeeSign1}" width="10" height="12" />  {!subtotalformatAmount}
+                        </td> 
+                    </tr>
+                    <apex:outputText rendered="{!ShowDiscountAmount == true }">
+                        <tr style="border: 1px solid #20B2AA;"> 
+                            <td colspan="3" style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;font-size: 13px;padding-left: 380px;color : #606060;"> <b>Discount</b>%</td>
+                            <td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;">{!quoteData.Discount__c}%</td> 
+                            <td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;">  <apex:image url="{!$Resource.RupeeSign1}" width="10" height="12" /> {!DiscountformatAmount}</td>
+                        </tr>
+                    </apex:outputText>
+                    <apex:outputText rendered="{!ShowPackingAmount == true }">
+                        <tr  style="border: 1px solid #20B2AA;"> 
+                            <td colspan="3" style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;font-size: 13px;padding-left: 380px;color : #606060;">Packing </td>
+                            <td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;">{!PackingAmount}%</td> 
+                            <td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;">
+                                <apex:image url="{!$Resource.RupeeSign1}" width="10" height="12" />  {!PackingAmountWithNTPformatAmount}
+                            </td> 
+                        </tr>
+                    </apex:outputText>
+                    
+                    <apex:outputText rendered="{!ShowFreightAmount == true }">
+                        <tr  style="border: 1px solid #20B2AA;"> 
+                            <td colspan="3" style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;font-size: 13px;padding-left: 380px;color : #606060;">Freight </td>
+                            <td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;"></td> 
+                            <td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;">
+                                <apex:image url="{!$Resource.RupeeSign1}" width="10" height="12" />  {!FreightAmountWithNTPformatAmount}
+                            </td> 
+                        </tr>
+                    </apex:outputText>
+                    <tr  style="border: 1px solid #20B2AA;"> 
+                        <td colspan="3" style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;border-color: #20B2AA;font-size: 13px;padding-left: 380px;color : #606060;"><b>Net Total Price</b> </td>
+                        <td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;"></td> 
+                        <td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;">
+                            <apex:image url="{!$Resource.RupeeSign1}" width="10" height="12" />  {!netTotalformatAmount}
+                        </td> 
+                    </tr>
+                    <!--tr style="border: 1px solid #20B2AA;"> 
+<td colspan="3" style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;font-size: 12px;padding-left: 380px;color : #606060;"> Unit Discounted Price </td>
+<td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;"></td> 
+<td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;">  <apex:image url="{!$Resource.RupeeSign1}" width="10" height="12" /> {!DiscountformatAmount}</td>
+</tr-->
+                    <!--tr  style="border: 1px solid #20B2AA;"> 
+<td colspan="3" style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;border-color: #20B2AA;font-size: 13px;padding-left: 380px;color : #606060;"><b>Total Package Price</b> </td>
+<td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;">{!quoteData.Packing__c}</td> 
+<td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;">{!quoteData.Packing_Value__c}</td> 
+</tr-->
+                    
+                    
+                    <!--tr  style="border: 1px solid #20B2AA;"> 
+<td colspan="3" style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;font-size: 13px;padding-left: 380px;color : #606060;">Insurance </td>
+<td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;">{!InsuranceAmount}%</td> 
+<td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;">
+<apex:image url="{!$Resource.RupeeSign1}" width="10" height="12" />  {!InsuranceAmountWithNTPformatAmount}
+</td> 
+</tr-->
+                    <tr  style="border: 1px solid #20B2AA;"> 
+                        <td colspan="3" style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;font-size: 13px;padding-left: 380px;color : #606060;">SGST% </td>
+                        <td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;">{!SGSTFormatValue}%</td> 
+                        <td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;">
+                            <apex:image url="{!$Resource.RupeeSign1}" width="10" height="12" />  {!SGSTformatAmount}
+                        </td> 
+                    </tr>
+                    <tr  style="border: 1px solid #20B2AA;"> 
+                        <td colspan="3" style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;font-size: 13px;padding-left: 380px;color : #606060;">CGST% </td>
+                        <td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;">{!CGSTFormatValue}%</td> 
+                        <td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;">
+                            <apex:image url="{!$Resource.RupeeSign1}" width="10" height="12" />  {!CGSTformatAmount}
+                        </td> 
+                    </tr>
+                    <tr  style="border: 1px solid #20B2AA;"> 
+                        <td colspan="3" style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;font-size: 13px;padding-left: 380px;color : #606060;">IGST% </td>
+                        <td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;">{!IGSTFormatValue}%</td> 
+                        <td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;color : #606060;"> <apex:image url="{!$Resource.RupeeSign1}" width="10" height="12" /> {!IGSTformatAmount}</td> 
+                    </tr>
+                </table>
+                <table   style="width: 100%;background-color:#C8E1E0;font-size: 13px;font-family: Noto Sans,Helvetica,sans-serif;">
+                    <tr style="border: 1px solid #20B2AA;">
+                        <td column="1" style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;border-right: hidden;padding-right: 188px;padding-left: 40px;color : #606060;">  
+                        </td>  
+                        <td style="border:solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;border-right: hidden;padding-right: 150px;color : #606060;font-size:15px;"><b>Total Price with Tax :</b> </td>  
+                        <td style="border: solid 1px #777;padding:2px;border-top: hidden;border-color: #20B2AA;border-left: hidden;padding-right: 5px;color : #606060;">
+                            <span style="font-size:16px;background-color:#C8E1E0;">  <apex:image url="{!$Resource.RupeeSign1}" width="10" height="12" style="background-color:#C8E1E0;" /> <b>{!formatAmount}</b></span> 
+                        </td> 
+                    </tr> 
+                </table>
+            </div> 
+            
+            <div style="font-family: Noto Sans,Helvetica,sans-serif;">
+                <table   style="width: 100%;border: 1px solid #20B2AA;background-color:#C8E1E0;margin-bottom: 6px;">
+                    <tr >
+                        <td column="1" style="text-align:left;padding-left:40px;font-size:13px;color : #606060;"> Amount in Words(INR): <b style="font-size:13px;">
+                            {!TotalPricewithTaxInWords}</b>   
+                        </td>  
+                    </tr>   
+                </table> 
+            </div><br/>
+            
+            <div style="font-family: Noto Sans,Helvetica,sans-serif">
+                <span style="color:#13928d;font-size:14px;"><b>Banking And Taxation Details</b></span> 
+                <div style="display: inline-block;width: 100%;margin: 1rem;padding: 2rem 2rem;padding-top:10px;font-family: Noto Sans,Helvetica,sans-serif;">
+                    <div style="display: inline-block;padding: 2rem 2rem;vertical-align: middle;float:left;width:50%">
+                        <span style="color:#606060;font-size: 13.5px;font-weight: bold;">Bank Name :</span>  <span style="font-size:13px;color: #606060;font-weight: normal"> {!BankAccDetails.BankName__c}</span><br/>
+                        <span style="color:#606060;font-size: 13.5px;font-weight: bold;">Branch :</span>  <span style="font-size:13px;color: #606060;font-size: 13.5px;font-weight: normal"> {!BankAccDetails.Branch__c}</span> <br/>
+                        <span style="color:#606060;font-size: 13.5px;font-weight: bold;">Email Id :</span> <span style="font-size:13px;color: #606060;font-size: 13.5px;font-weight: normal"> {!BankAccDetails.Email__c}</span>   <br/>
+                        <span style="color:#606060;font-size: 13.5px;font-weight: bold;">Address :</span>  <span style="font-size:13px;color: #606060;font-size: 13.5px;font-weight: normal"> {!BankAccDetails.Address__c}</span>  <br/>
+                    </div>
+                    <div style="display: inline-block;padding: 2rem 2rem;vertical-align: middle;float:left;width:50%;color:#606060;">
+                        <span style="color:#606060;font-weight: bold;font-size: 13.5px">Account No :  <span style="color:#606060;font-weight: normal;font-size: 13.5px">{!BankAccDetails.ACCOUNT_NO__c}</span> </span><br/>
+                        <span style="color:#606060;font-weight: bold;font-size: 13.5px">Account Name : <span style="color:#606060;font-weight: normal;font-size: 13.5px">{!BankAccDetails.ACCOUNT_NAME__c}</span> </span><br/>
+                        <span style="color:#606060;font-weight: bold;font-size: 13.5px">NEFT/RTGS/IFSC Code : <span style="color:#606060;font-weight: normal;font-size: 13.5px">{!BankAccDetails.NEFT_RTGS_IFSC_CODE__c}</span> </span><br/>
+                        <span style="color:#606060;font-weight: bold;font-size: 13.5px">Swift No :  <span style="color:#606060;font-weight: normal;font-size: 13.5px">{!BankAccDetails.Swift_No__c}</span></span><br/>
+                        <span style="color:#606060;font-weight: bold;font-size: 13.5px">GST No : <span style="color:#606060;font-weight: normal;font-size: 13.5px">{!BankAccDetails.GST_NO__c}</span></span><br/>
+                        <span style="color:#606060;font-weight: bold;font-size: 13.5px">Pan No : <span style="color:#606060;font-weight: normal;font-size: 13.5px">{!BankAccDetails.Pan_No__c}</span></span><br/>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div style="font-family: Noto Sans,Helvetica,sans-serif;">
+                <!-- <apex:outputText rendered="{!termDetails !=null }"> -->
+                    <h2 style="text-align: center;color:#13928d;font-family: Noto Sans,Helvetica,sans-serif;font-size:14px;">
+                        TERMS &amp; CONDITIONS </h2> 
+                    
+                    <div style="float:center;font-family: Noto Sans,Helvetica,sans-serif">
+                        <table style="border: 1px solid black;border-color: #13928d;-fs-table-paginate: paginate;width:100%">
+                            <tr style="width:50%;">
+                                <td style="text-align:center;font-size:11px;border-right:1px solid #13928d;padding: 7px;width:20%"> <span style="color:#606060;font-weight: bold;font-size:12px;">Packing  &amp;  Forwarding</span></td>
+                                <td style="font-size:13px;padding: 8px;color: #606060;width:80%">{!quoteData.Extra_P_F__c}</td>
+                            </tr>
+                            <tr style="width:50%;">
+                                <td style="text-align:center;font-size:11px;border-right:1px solid #13928d;padding: 7px;width:20%"><span style="color:#606060;font-weight: bold;font-size:12px;">Freight Insurance</span></td>
+                                <td style="font-size:13px;padding: 8px;color: #606060;width:80%">{!quoteData.Freight_Insurance__c}</td>
+                            </tr>
+                            <tr style="width:50%;">
+                                <td style="text-align:center;font-size:11px;border-right:1px solid #13928d;padding: 7px;width:20%"> <span style="color:#606060;font-weight: bold;font-size:12px;">Prices</span></td>
+                                <td style="font-size:13px;padding: 8px;color: #606060;width:80%">{!quoteData.Prices__c}</td>
+                            </tr>
+                            <tr style="width:50%;">
+                                <td style="text-align:center;font-size:11px;border-right:1px solid #13928d;padding: 7px;width:20%"><span style="color:#606060;font-weight: bold;font-size:12px;">Payment Terms</span></td>
+                                <td style="font-size:13px;padding: 8px;color: #606060;width:80%">{!quoteData.Payment_Terms__c}</td>
+                            </tr>
+                            <tr style="width:50%;">
+                                <td style="text-align:center;font-size:11px;border-right:1px solid #13928d;padding: 7px;width:20%"><span style="color:#606060;font-weight: bold;font-size:12px;">Delivery Period</span></td>
+                                <td style="font-size:13px;padding: 8px;color: #606060;width:80%">{!quoteData.Delivery_Terms__c}</td>
+                            </tr>
+                            <tr style="width:50%;">
+                                <td style="text-align:center;font-size:11px;border-right:1px solid #13928d;padding: 7px;width:20%"><span style="color:#606060;font-weight: bold;font-size:12px;">Commissioning Assistance</span></td>
+                                <td style="font-size:13px;padding: 8px;color: #606060;width:80%">{!quoteData.Commission_Assistance__c}</td>
+                            </tr>
+                            <tr style="width:50%;">
+                                <td style="text-align:center;font-size:11px;border-right:1px solid #13928d;padding: 7px;width:20%"><span style="color:#606060;font-weight: bold;font-size:12px;">Warranty Period</span></td>
+                                <td style="font-size:13px;padding: 8px;color: #606060;width:80%">{!quoteData.Warranty__c}</td>
+                            </tr>
+                            <tr style="width:50%;">
+                                <td style="text-align:center;font-size:11px;border-right:1px solid #13928d;padding: 7px;width:20%"><span style="color:#606060;font-weight: bold;font-size:12px;">Quotation Validity</span></td>
+                                <td style="font-size:13px;padding: 8px;color: #606060;width:80%">{!quoteData.Validity__c}</td>
+                            </tr>
+                        </table>
+                    </div>
+                <!-- </apex:outputText> -->
+                
+                <!-- <h2 style="text-align: center;color:#13928d;font-family: Noto Sans,Helvetica,sans-serif;font-size:14px;">
+                    ADDITIONAL INFORMATION
+                </h2>
+                
+                <div style="border: 1px solid green;border-color: #13928d;font-size:13px;">
+                    <ul style="list-style-type: circle;">
+                        <li style="text-justify;padding-bottom: 0px;color:#606060;">{!addinfoDetails.Delivery__c}<br/><br/></li>
+                        <li  style="text-justify;padding-bottom: 0px;color:#606060;">{!addinfoDetails.Mounting__c}<br/><br/></li>
+                        <li style="text-justify;padding-bottom: 0px;color:#606060;">{!addinfoDetails.Quotation__c}<br/><br/></li>
+                        <li  style="text-justify;padding-bottom: 0px;color:#606060;">{!addinfoDetails.Necessary__c}<br/><br/></li>
+                        <li  style="text-justify;padding-bottom: 0px;color:#606060;">{!addinfoDetails.Cable__c}<br/><br/></li>
+                        <li  style="text-justify;padding-bottom: 0px;color:#606060;">{!addinfoDetails.Required__c}<br/><br/></li>
+                        <li  style="text-justify;padding-bottom: 0px;color:#606060;">{!addinfoDetails.Third__c}<br/><br/></li>
+                        <li  style="text-justify;padding-bottom: 0px;color:#606060;">{!addinfoDetails.Actuator__c}<br/><br/></li>
+                        <li  style="text-justify;padding-bottom: 0px;color:#606060;">{!addinfoDetails.The__c}<br/></li>
+                    </ul>          
+                </div>
+                
+                <br/>
+                <br/>
+                <br/> -->
+                <div style="font-size: 15px;font-family: Noto Sans,Helvetica,sans-serif">
+                    <p style="text-align: left;color:#606060;">
+                        DETAIL TECHNICAL SPECIFICATION AS PER ENCLOSED DATA SHEET.
+                        Hope the above offer, enclosed literature and technical datasheet is in line and meets all your requirements.
+                        If any questions please reach out to the undersigned. <br/>
+                    </p>
+                    <p style="text-align: center;color:#13928d;">
+                        <b style="font-size: 15px;font-weight: 800;">THANK YOU</b>
+                    </p>
+                    <p>
+                        <span style="color:#606060;font-weight: bold;">From</span> <br/>
+                        <span style="color:#606060;font-size: 15px;">
+                            {!addInfo.Company_Name__c}<br/>
+                            {!addInfo.Designation__c}<br/>
+                            CELL NO. {!addInfo.Cell_No__c}<br/>
+                            {!addInfo.Comp_Name__c}<br/>
+                        </span>
+                    </p>
+                </div>
+                
+            </div>
+            
+        </div>
+        
+        
+    </body>
+</apex:page>

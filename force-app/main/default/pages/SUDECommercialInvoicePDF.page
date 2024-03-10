@@ -1,0 +1,335 @@
+<apex:page standardController="Opportunity" extensions="SUDECommercialInvoicePDFController" sidebar="false" showHeader="false" renderAs="pdf">
+    <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <style type="text/css">
+     @page {
+        size:A4 portrait;
+        border: 2px solid white; 
+    }
+    
+    
+    
+    </style>
+    </head>
+    <body>
+        <center><h2 style="font-family: Arial Unicode MS;font-size: 12pt;"><b>Sales Order Acknowledgment</b></h2></center>
+
+        <div>
+            <table style="border-collapse: collapse;">
+                <tr cellpadding="0">
+                    <td style="border-top: 1px solid black;border-left: 1px solid black;border-bottom: 1px solid black;">
+                    <table>
+                        <tr cellpadding="0">
+                    <td style="width:30%;">
+                        <p style="padding-left: 35px">
+                            EXPORTER    
+                        </p>
+                        <apex:image value="{!URLFOR($Resource.SudeLogo)}" style="max-height:40%;width:200px;"/>
+                    </td>
+                    <td style="font-family: Arial Unicode MS;font-size: 8pt;width:40%;padding:5px !important">
+                           <b style="padding:1px !important;color:#014d4e;font-size: 14pt;font-family: Impact;">
+                            SUDE ENGINEERING CORPORATION</b><br/>
+                            N0.1106, 10th Main Road, RPC Layout, Hampingar,
+                            Vijayanagar, Bangalore - 560104<br/>[Old Pin 560040]. Karnataka. India<br/>
+                            <b>GSTIN/UIN: 29AITPS4961M1Z2</b> <br/>
+                            State Name : Karnataka, Code : 29 <br/>
+                            E-Mail : sudeengg@gmail.com / sude@sudeengg.com<br/>
+                            Website: www.sudeengg.com  <br/>
+                            Contact No.+91 80 23302145 / 23402297 / 23141104 / 23305729 / +91 9845018216  
+                    </td>
+                    </tr>
+                    </table>
+                    </td>
+                    <td style="font-family: Arial Unicode MS;font-size: 8pt;width:40%;border: 1px solid black;padding: 0px;" valign="top">
+                        <table style="width:100%;border-collapse: collapse;">
+                            <tr>
+                                <td style="width:50%;border: 0.5px solid black;"><b style="padding:3px !important;">Order ack number </b></td>
+                                <td style="border: 0.5px solid black;"><b style="padding:3px !important;">Date</b></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 0.5px solid black;"><b style="padding:3px !important;"> {!selectedOpp.Order_Acknowledgement_Number__c}</b></td>
+                                <td style="border: 0.5px solid black;"><b style="padding:3px !important;"> {!DateFormated}</b></td>
+                            </tr>
+                           <tr>
+                                <td style="border: 0.5px solid black;"><b style="padding:3px !important;">Buyer s Order No. &amp; Date</b></td>
+                                <td style="border: 0.5px solid black;"><b style="padding:3px !important;">{!selectedOpp.Order_Reference_Number__c} &amp; {!formatedReferenceDate} </b></td>
+                            </tr>
+                          
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="border: 1px solid black;font-family: Arial Unicode MS;font-size: 8pt;">
+                        <span style="float:left;padding:5px !important;">MSME UDYAM AADHAR NO    :UDYAM-KR-03-0013224</span><br/><span style="float:right;">SSI NUMBER : 290201205348 </span><br/>               
+                        <p style="float:left;padding:5px !important;">
+                            IMPORT &amp; EXPORT CODE:   073021290<br/>
+                            PAN NO.  :AITPS4961M<br/><br/>
+                            AD CODE NO. PART-I   IS 02000Y3  PART II   IS 8400006
+                        </p>
+                    </td>
+                    <!--<td style="font-family: Arial Unicode MS;font-size: 8pt;width:40%;border: 1px solid black;padding: 0px;" valign="top">
+                      
+                    </td>-->
+                </tr>
+            </table>
+             <table style="border-collapse: collapse;width:100%">
+                <tr>
+                    <td colspan="1" style="border: 1px solid black;font-family: Arial Unicode MS;font-size: 8pt;width:50%;">
+                    <p style="padding:5px !important;">
+                        <b>Bill To:</b><br/>
+                        <apex:outputText value="{!billingAddress}" escape="false"></apex:outputText>
+                    </p>
+                </td>
+                <td colspan="1" style="border: 1px solid black;font-family: Arial Unicode MS;font-size: 8pt;padding:1px !important;">
+                    <p style="padding:5px !important;">
+                        Ship To:<br/>
+                        <apex:outputText value="{!shippingAddress}" escape="false"></apex:outputText>
+                    </p>
+                </td>
+            </tr>
+           <!-- <tr>
+                <td colspan="1" style="border: 1px solid black;font-family: Arial Unicode MS;font-size: 8pt;">
+                    <p>
+                        Ship To:<br/>
+                        <apex:outputText value="{!shippingAddress}" escape="false"></apex:outputText>
+                    </p>
+                </td>
+                <td style="font-family: Arial Unicode MS;font-size: 8pt;width:40%;border: 1px solid black;padding: 0px;" valign="top">
+               
+                </td>
+             </tr>-->
+        </table>
+        <apex:variable value="{!0}" var="SNO"/>
+        <table style="table-layout: fixed;" cellspacing="0" cellpadding="0">
+            <tr>
+                <th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:3% !important;" >
+                    <center>Sr No.</center>
+                </th>
+                <!--<th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:50px !important" >
+                    <center>Product Type</center>
+                </th>-->
+                
+                <th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:50px !important;" >
+                    <center> Size</center>
+                </th>
+                <th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:110px !important;" >
+                    <center>Product Name</center>
+                </th>
+                <th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:150px !important;padding:1px;">
+                    <center>Product  Model No</center>
+                </th>
+                <th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:50px !important;padding:1px;">
+                    <center>HSN Code</center>
+                </th>
+                <th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:70px !important;padding:2px;" >
+                    <center>Products Technical Specification</center>
+                </th>
+                <th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:5% !important;padding:1px;">
+                    <center>Qty.</center>
+                </th>
+                <th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:50px !important;padding:1px;">
+                    <center>Unit Price </center>
+                </th>
+                <th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:50px !important;padding:1px;">
+                    <center>Total Price  INR</center>
+                </th>
+             </tr>
+                <apex:repeat value="{!quotesItem}" var="str" id="theRepeat">
+                    <apex:variable value="{!SNO+1}" var="SNO"/>
+                    <tr class="{!if(SNO == 2 ,'splitTable','')}">
+                        <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;width:10px !important;padding:1px;">
+                            <center>{!SNO}</center>
+                        </td>
+                       <!-- <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;width:50px !important">
+                            <center>{!str.Product2.Family}</center>
+                        </td>-->
+                     
+                        <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;width:60px !important;">
+                            <center>{!str.Product2.Valve_Size__c}</center>
+                        </td>
+                        
+                        <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;width:110px !important;">
+                            <center>{!str.Product2.Product_Name__c}</center>
+                        </td>
+                        <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;padding:1px;width:10px !important;word-break: break-all;">
+                               <center><apex:outputText value="{!str.Product2.Name}" escape="false"> </apex:outputText> 
+                               </center>     
+                        </td>
+                        <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;padding:1px;width:10px !important;word-break: break-all;">
+                               <center><apex:outputText value="{!str.Product2.HSN_Code__c}" escape="false"> </apex:outputText> 
+                               </center>     
+                        </td>
+                        <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;width:80px !important;padding:4px;">
+                            <center> <apex:outputText value="{!str.Product2.Description}" escape="false"> </apex:outputText> </center>
+                        </td>
+                        <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;width:10px !important;padding:1px;" class="eachQuantity">
+                            <center> {!str.Quantity}</center>
+                        </td>
+                        <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;width:50px !important;padding:1px;">
+                            <center><apex:image url="{!$Resource.IndianCurrencySymbol}" width="10" height="10"/> {!str.UnitPrice}</center>
+                        </td>
+                        <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;width:50px !important;padding:1px;">
+                            <center><apex:image url="{!$Resource.IndianCurrencySymbol}" width="10" height="10"/> {!str.Total_Price_W_O_Discount__c}</center>
+                        </td>
+                    </tr>
+                </apex:repeat>
+                <tr >
+                    <td colspan="6" style="font-family: Arial Unicode MS Bold;font-size: 8pt;background:#d8d8d8;border: 1px solid black;">
+                        <div style="float:right;">
+                            <b>TOTAL&nbsp;</b>
+                        </div>
+                    </td>
+                    <td colspan="1" style="font-family: Arial Unicode MS Bold;font-size: 9pt;background:#d8d8d8;border-top: 1px solid black;border-right: 1px solid black;border-left: 1px solid black;">
+                        <div>
+                        <center><b>{!totalQuantity}</b></center> 
+                        </div>
+                    </td>
+                    <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;background:#d8d8d8;border-top: 1px solid black;border-right: 1px solid black;">
+                        <div style="float:right">
+                        <center ><b><apex:image url="{!$Resource.IndianCurrencySymbol1}" width="10" height="10"/> {!totalPriceBeforePacking}</b></center> 
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="font-family: Arial Unicode MS Bold;font-size: 8pt;border-left: 1px solid black;">
+                        <div style="float:right;">
+                            <b>P &amp; F&nbsp;</b>
+                        </div>
+                    </td>
+                    <td colspan="1" style = "border-right: 1px solid black;border-left: 1px solid black;" >
+                        <div style="font-family: Arial Unicode MS Bold;font-size: 9pt;">
+                        <apex:outputPanel rendered="{!if(syncedQuote.Packing__c != 0.00 ,true,false)}">
+                            <center ><b>{!syncedQuote.Packing__c}% </b></center>                         
+                        </apex:outputPanel>
+                        </div>
+                    </td>
+                    <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;">
+                        <div style="float:right;border-right: 1px solid black;">
+                        <center ><b><apex:image url="{!$Resource.IndianCurrencySymbol}" width="10" height="10"/> {!PackingPrice} </b></center> 
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="font-family: Arial Unicode MS Bold;font-size: 8pt;background:#d8d8d8;padding-left: 5px;border-left: 1px solid black;">
+                        <div style="float:right;">
+                            <b>MATERIAL COST &nbsp;</b>
+                        </div>
+                    </td>
+                    <td colspan="1" style="font-family: Arial Unicode MS Bold;font-size: 9pt;background:#d8d8d8;border-right: 1px solid black;border-left: 1px solid black;">
+                        <div style="float:left">
+                        <center><b></b></center> 
+                        </div>
+                    </td>
+                    <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;background:#d8d8d8;">
+                        <div style="float:right;border-right: 1px solid black;">
+                        <center ><b><apex:image url="{!$Resource.IndianCurrencySymbol1}" width="10" height="10"/> {!totalPriceWithPacking}</b></center> 
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="font-family: Arial Unicode MS Bold;font-size: 8pt;border-left: 1px solid black;">
+                        <div style="float:right;">
+                            <b>CGST&nbsp;</b>
+                        </div>
+                    </td>
+                    <td colspan="1" >
+                        <div style="font-family: Arial Unicode MS Bold;font-size: 9pt;border-right: 1px solid black;border-left: 1px solid black;">
+                        <center ><b>{!syncedQuote.CGST__c}%</b></center> 
+                        </div>
+                    </td>
+                    <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;">
+                        <div style="float:right;border-right: 1px solid black;">
+                        <center ><b><apex:image url="{!$Resource.IndianCurrencySymbol}" width="10" height="10"/> {!syncedQuote.CGST_Value__c}</b></center> 
+                        </div>
+                    </td>
+                    
+                </tr>
+                <tr>
+                    <td colspan="6" style="font-family: Arial Unicode MS Bold;font-size: 8pt;border-left: 1px solid black;">
+                        <div style="float:right;">
+                            <b>SGST&nbsp;</b>
+                        </div>
+                    </td>
+                    <td colspan="1" >
+                        <div style="font-family: Arial Unicode MS Bold;font-size: 9pt;border-right: 1px solid black;border-left: 1px solid black;">
+                        <center ><b>{!syncedQuote.SGST__c}%</b></center> 
+                        </div>
+                    </td>
+                    <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;">
+                        <div style="float:right;border-right: 1px solid black;">
+                        <center ><b><apex:image url="{!$Resource.IndianCurrencySymbol}" width="10" height="10"/> {!syncedQuote.SGST_Value__c}</b></center> 
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="font-family: Arial Unicode MS Bold;font-size: 8pt;border-left: 1px solid black;">
+                        <div style="float:right;">
+                            <b>IGST&nbsp;</b>
+                        </div>
+                    </td>
+                    <td colspan="1" style="font-family: Arial Unicode MS Bold;font-size: 9pt;border-right: 1px solid black;border-left: 1px solid black;">
+                        <div>
+                        <center ><b>{!syncedQuote.IGST__c}% </b></center> 
+                        </div>
+                    </td>
+                    <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;">
+                        <div style="float:right;border-right: 1px solid black;">
+                        <center ><b><apex:image url="{!$Resource.IndianCurrencySymbol}" width="10" height="10"/>{!syncedQuote.IGST_Value__c}</b></center> 
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="font-family: Arial Unicode MS Bold;font-size: 8pt;background:#d8d8d8;border: 1px solid black;border-left: 1px solid black;">
+                        <div style="float:right;">
+                            <b>TOTAL PRICE WITH TAX&nbsp;</b>
+                        </div>
+                    </td>
+                    <td colspan="1" style="font-family: Arial Unicode MS Bold;font-size: 9pt;background:#d8d8d8;border-right: 1px solid black;border-left: 1px solid black;">
+                        <div style="float:left">
+                        <center ><b></b></center> 
+                        </div>
+                    </td>
+                    <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;background:#d8d8d8;">
+                        <div style="float:right;border-right: 1px solid black;">
+                        <center ><b><apex:image url="{!$Resource.IndianCurrencySymbol1}" width="10" height="10"/> {!priceWithAllTaxes}</b></center> 
+                        </div>
+                    </td>
+                </tr>
+        </table>
+            <table style="border-collapse: collapse;width:100%">
+                <tr>
+                    <td style="font-family: Arial Unicode MS;font-size: 8pt;border: 1px solid black;width:50%;padding:5px !important;" valign="top">
+                        <p style="padding:2px !important;">
+                            <b>Terms &amp; Conditions</b><br/><br/>
+                            <ol>
+                                <apex:repeat value="{!termsAndConditons}" var="terms">
+                                   <li> {!terms}</li>
+                                </apex:repeat>
+                            </ol>
+                            
+                        </p>
+                    </td>
+                    <td style="font-family: Arial Unicode MS;font-size: 8pt;padding:5px !important;border: 1px solid black;" valign="top">
+                        <p style="padding:2px !important;">
+                            <b>Our Bank Details</b><br/><br/>
+                            BANK NAME : {!bankDetails.BANK_NAME__c}<br/>
+                            {!bankDetails.BRANCH__c}<br/><br/>
+                            Account No : {!bankDetails.Account_No__c} <br/>
+                            IFSC CODE : {!bankDetails.IFSC_Code__c}<br/>
+                            SWIFT CODE : {!bankDetails.Swift_Code_For_Commercial_Invoice__c}<br/>                         
+                        </p>  
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;padding:3px;">
+                        We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.       
+                    </td>
+                    <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;padding:3px;">
+                        For  SUDE ENGINEERING CORPORATION<br/>
+                        Authorised Signatory
+                    </td>                            
+                </tr>   
+            </table>
+        </div>
+    </body>
+</apex:page>

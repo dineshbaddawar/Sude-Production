@@ -1,0 +1,53 @@
+<!-- /**
+ * @author [Dinesh Baddawar]
+ * @email dinesh.b@utilitarianLab.com
+ * @create date 2023-04-25 19:47:52
+ * @modify date 2023-04-25 19:47:52
+ * @desc [description]
+ */ -->
+
+<aura:component controller="CustomCloneAuraHelper" implements="force:appHostable,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader" access="global" >
+    <!--Component-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="fieldApiNameList" type="List"/> 
+    <aura:attribute name="myMap" type="Map" />
+
+    <aura:html tag="style">
+        .slds-modal__container{
+        max-width: 80rem !important;
+        width:80% !important;
+        }
+    </aura:html>
+
+        <lightning:card class="slds-p-around_medium">
+            <lightning:recordEditForm aura:id="recordEditForm" objectApiName="Product2" onerror="{!c.handleError}" onsuccess="{!c.handleSuccess}">
+                <lightning:messages />
+                <h2 style="text-align:center;font-size:16px;font-family: Noto Sans,Helvetica,sans-serif;">
+                    <b>CLONE RECORD</b>
+                    <hr style="width:100%;text-align:left;margin-left:0"/>
+                </h2>
+               
+                <aura:iteration items="{!v.myMap}"  var="mapKey" indexVar="key">
+                    <div class="slds-page-header">
+                        <div class="slds-page-header__row">
+                            <div class="slds-page-header__name-title">
+                                <h2>
+                                    <span class=" slds-truncate"><b>{!mapKey.key}</b> </span>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <aura:iteration items="{!mapKey.value}" var="mapValue">
+                    <!-- <lightning:inputField fieldName="{!mapValue}"/> -->
+                    <lightning:inputField fieldName="{!mapValue.key}" value="{!mapValue.value}" disabled="{!mapValue.key == 'Series_Name__c'}" />
+                </aura:iteration>
+                </aura:iteration>
+
+                <div slot="footer" class="slds-align_absolute-center slds-m-top_x-small">
+                    <lightning:button onclick="{!c.CancelEdit}" variant="neutral"  label="Cancel"></lightning:button>
+                    <lightning:button variant="brand" type="submit"  label="Save" class="slds-m-left_x-small"></lightning:button>
+                </div>
+            </lightning:recordEditForm>
+        </lightning:card>
+   
+</aura:component>

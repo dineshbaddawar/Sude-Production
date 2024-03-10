@@ -1,0 +1,573 @@
+<apex:page standardController="Quote" extensions="DisplayQuoteDetailController" action="{!generatePDF}" sidebar="false" showHeader="false" applyHtmlTag="false"  renderAs="pdf"  cache="true">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <style type="text/css">
+            @page {
+            size:A4 portrait;
+            border: 2px solid white; 
+            }
+        </style>
+    </head>
+    <center><h2>QUOTATION</h2></center>
+    <div style="border: 1.5px solid black;">
+        <table style="border-collapse: collapse;-fs-table-paginate: paginate;border-spacing:0;">
+            <tr style="border-collapse: collapse;">
+                <td style="font-size: 7pt;width:60%;border-collapse: collapse;padding:5px !important;">
+                    <b style="padding:1px !important;color:#014d4e;font-size: 14pt;font-family: Impact;">
+                        SUDE ENGINEERING CORPORATION</b><br/>
+                    <b style="font-size: 8pt;">N0. 1106, 10th MAIN ROAD, RPC LAYOUT, HAMPINAGAR,<br/>
+                    NEAR HAMPINAGAR BUS STAND, VIJAYANAGAR,<br/>
+                    BANGALORE 560 104 [ OLD PIN CODE 560 040 ] , KARNATAKA<br/>
+                    CELL NO.+91- 98450 18216 / 9822980003/ 9632058718<br/>
+                    TEL NO. 080 23141104 /23302145 /23402297<br/>
+                    Email:   sudeengg@gmail.com  / sude@sudeengg.com<br/>
+                    Web: www.sudeengg.com / www.sdtork.com  </b>
+                </td>
+                <td style="width:40%;border-collapse: collapse;">
+                    <apex:image value="{!URLFOR($Resource.SudeLogo)}" style="max-height: 60%"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="border-top: 1.5px solid black;border-right: 1.5px solid black;border-collapse: collapse;font-family: Arial Unicode MS Bold;font-size: 11pt;padding:2px !important">
+                    <b style="font-size: 12pt;">To,</b><br/>
+                    <apex:outputPanel rendered="{!if(parentAccount.Name != null ,true,false)}">
+                        <b> {!parentAccount.Name} </b>,<br/>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!if(parentAccount.BillingStreet != null ,true,false)}">
+                        <b> {!parentAccount.BillingStreet}   </b>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!if(parentAccount.BillingCity != null ,true,false)}">
+                        <b>{!parentAccount.BillingCity},</b>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!if(parentAccount.BillingPostalCode != null ,true,false)}">
+                        <b>{!parentAccount.BillingPostalCode} , </b>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!if(parentAccount.BillingCountry != null ,true,false)}">
+                        <b>{!parentAccount.BillingCountry}.</b>
+                    </apex:outputPanel><br/>
+                    <apex:outputPanel rendered="{!if(syncedQuote.Email != null ,true,false)}">
+                        <b>{!syncedQuote.Email}</b><br/>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!if(parentAccount.Phone != null ,true,false)}">
+                        <b>t : {!parentAccount.Phone}</b>,
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!if(syncedQuote.Phone != null ,true,false)}">
+                        <b> m : {!syncedQuote.Phone}</b>,
+                    </apex:outputPanel><br/> 
+                    <apex:outputPanel rendered="{!if(syncedQuote.fax != null,true,false)}">
+                        <b>f : {!syncedQuote.fax}</b>
+                        <apex:outputPanel rendered="{!if(parentAccount.website != null,true,false)}">
+                            <b>,</b>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                    <b>{!parentAccount.website}</b>  
+                </td>
+                <td style="padding-left: 5px;border-top: 1.5px solid black;border-collapse: collapse;font-family: Arial Unicode MS;font-size: 10pt;padding:2px !important">
+                    <b style="font-family: Arial Unicode MS Bold;font-size: 12pt;">  Quotation No. :  {!syncedQuote.Name}</b><br/>
+                    Date : {!DAY(TODAY())}.{!MONTH(TODAY())}.{!YEAR(TODAY())}<br/>
+                    Inquiry Number : {!syncedQuote.Inquiry_Number__c}<br/>
+                    Date : {!DAY(syncedQuote.Inquiry_Reference_Date__c)}.{!MONTH(syncedQuote.Inquiry_Reference_Date__c)}.{!YEAR(syncedQuote.Inquiry_Reference_Date__c)}<br/>
+                
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 10pt;border-top: 1.5px solid black;border-bottom: 1.5px solid black;border-collapse: collapse">
+                    <b style="font-family: Arial Unicode MS Bold;font-size: 12pt;"> <center>Kind Attn.: {!syncedQuote.Contact.Salutation} {!syncedQuote.Contact.Name}</center></b>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="font-size: 9pt;padding:2px !important">
+                    <p >
+                        <apex:outputText value="{!syncedQuote.Customer_Body__c}" escape="false"> </apex:outputText>
+                    </p></td>
+            </tr>
+        </table>
+        <apex:variable value="{!0}" var="SNO"/>
+        <table style="table-layout: fixed;-fs-table-paginate: paginate;border-spacing: 0;" cellspacing="0" cellpadding="0">
+            <tr>
+                <th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:3% !important;" >
+                    <center>Sr No.</center>
+                </th>
+                <!--<th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:50px !important" >
+<center>Product Type</center>
+</th>-->
+                
+                <th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:45px !important;" >
+                    <center> Size</center>
+                </th>
+                <th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:110px !important;" >
+                    <center>Product Name</center>
+                </th>
+                <th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:150px !important;padding:1px;">
+                    <center>Product  Model No</center>
+                </th>
+                <th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:50px !important;padding:1px;">
+                    <center>HSN Code</center>
+                </th>
+                <th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:76px !important;padding:2px;" >
+                    <center>Products Technical Specification</center>
+                </th>
+                <th colspan = "2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:4% !important;padding:1px;">
+                    <center>Qty.</center>
+                </th>
+                <th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:50px !important;padding:1px;">
+                    <center>Unit Price </center>
+                </th>
+                <th style="font-family: Arial Unicode MS Bold;font-size: 9pt;border: 1px solid black;width:50px !important;padding:1px;">
+                    <center>Total Price</center>
+                </th>
+            </tr>
+            <apex:repeat value="{!quotesItem}" var="str" id="theRepeat">
+                <apex:variable value="{!SNO+1}" var="SNO"/>
+                <tr class="{!if(SNO == 2 ,'splitTable','')}">
+                    <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;width:10px !important;padding:1px;">
+                        <center>{!SNO}</center>
+                    </td>
+                    <!-- <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;width:50px !important">
+<center>{!str.Product2.Family}</center>
+</td>-->
+                    
+                    <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;width:60px !important;">
+                        <center>{!str.Product2.Valve_Size__c}</center>
+                    </td>
+                    
+                    <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;width:110px !important;">
+                        <center>{!str.Product2.Product_Name__c}</center>
+                    </td>
+                    <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;padding:1px;width:10px !important;word-break: break-all;">
+                        <center><apex:outputText value="{!str.Product2.Name}" escape="false"> </apex:outputText> 
+                        </center>     
+                    </td>
+                    <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;padding:1px;width:10px !important;word-break: break-all;">
+                        <center><apex:outputText value="{!str.Product2.HSN_Code__c}" escape="false"> </apex:outputText> 
+                        </center>     
+                    </td>
+                    <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;width:80px !important;padding:4px;">
+                        <center> <apex:outputText value="{!str.Product2.Description}" escape="false"> </apex:outputText> </center>
+                    </td>
+                    <td colspan = "2" style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;width:10px !important;padding:1px;" class="eachQuantity">
+                        <center> {!str.Quantity}</center>
+                    </td>
+                    <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;width:50px !important;padding:1px;">
+                        <center>
+                            <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'INR'}" var="a" value="a">
+                                <apex:image url="{!$Resource.IndianCurrencySymbol}" width="10" height="10"/> 
+                            </apex:variable>
+                            <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'USD'}" var="a" value="a">
+                                <apex:image url="{!$Resource.Dollar}" width="8" height="8"/> 
+                            </apex:variable>{!str.UnitPrice}
+                                </center>
+                    </td>
+                    <td style="font-family: Arial Unicode MS Bold;font-size: 8pt;border: 1px solid black;width:50px !important;padding:1px;">
+                        <center> <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'INR'}" var="a" value="a">
+                                <apex:image url="{!$Resource.IndianCurrencySymbol}" width="10" height="10"/> 
+                            </apex:variable>
+                            <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'USD'}" var="a" value="a">
+                                <apex:image url="{!$Resource.Dollar}" width="8" height="8"/> 
+                            </apex:variable>
+                            <apex:outputText value="{0, number, 00.00}">
+                                <apex:param value="{!str.Quantity * str.UnitPrice}" />
+                            </apex:outputText>
+                           </center>
+                    </td>
+                </tr>
+            </apex:repeat>
+            <tr >
+                <td colspan="6" style="font-family: Arial Unicode MS Bold;font-size: 8pt;background:#d8d8d8;border: 1px solid black;">
+                    <div style="float:right;">
+                        <b>TOTAL&nbsp;</b>
+                    </div>
+                </td>
+                <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;background:#d8d8d8;border-top: 1px solid black;border-right: 1px solid black;border-left: 1px solid black;">
+                    <div>
+                        <center><b>{!totalQuantity}</b></center> 
+                    </div>
+                </td>
+                <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;background:#d8d8d8;border-top: 1px solid black;">
+                    <div style="float:right">
+                        <center ><b> <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'INR'}" var="a" value="a">
+                                <apex:image url="{!$Resource.IndianCurrencySymbol}" width="10" height="10"/> 
+                            </apex:variable>
+                            <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'USD'}" var="a" value="a">
+                                <apex:image url="{!$Resource.Dollar}" width="8" height="8"/> 
+                            </apex:variable> {!subTotalForTotal}</b></center> 
+                    </div>
+                </td>
+            </tr>
+            
+             <tr>
+                <td colspan="6" style="font-family: Arial Unicode MS Bold;font-size: 8pt;">
+                    <div style="float:right;">
+                        <b>Discount &nbsp;</b>
+                    </div>
+                </td>
+                <td colspan="2" style = "border-right: 1px solid black;border-left: 1px solid black;" >
+                    <div style="font-family: Arial Unicode MS Bold;font-size: 9pt;text-align-center;">
+                        <center><b>{!syncedQuote.Discount}%</b></center>
+                    </div>
+                </td>
+                <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;">
+                    <div style="float:right">
+                        <center ><b> <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'INR'}" var="a" value="a">
+                                <apex:image url="{!$Resource.IndianCurrencySymbol}" width="10" height="10"/> 
+                            </apex:variable>
+                            <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'USD'}" var="a" value="a">
+                                <apex:image url="{!$Resource.Dollar}" width="8" height="8"/> 
+                            </apex:variable> {!syncedQuote.Subtotal_Discount_Value__c} </b></center> 
+                    </div>
+                </td>
+            </tr>
+            
+            
+            <tr>
+                <td colspan="6" style="font-family: Arial Unicode MS Bold;font-size: 8pt;">
+                    <div style="float:right;">
+                        <b>Packing &nbsp;</b>
+                    </div>
+                </td>
+                <td colspan="2" style = "border-right: 1px solid black;border-left: 1px solid black;" >
+                    <div style="font-family: Arial Unicode MS Bold;font-size: 9pt;">
+                        <!--<apex:outputPanel rendered="{!if(syncedQuote.Packing__c != 0.00 ,true,false)}">
+<center ><b>{!syncedQuote.Packing__c}% </b></center>                         
+</apex:outputPanel>-->
+                    </div>
+                </td>
+                <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;">
+                    <div style="float:right">
+                        <center ><b> <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'INR'}" var="a" value="a">
+                                <apex:image url="{!$Resource.IndianCurrencySymbol}" width="10" height="10"/> 
+                            </apex:variable>
+                            <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'USD'}" var="a" value="a">
+                                <apex:image url="{!$Resource.Dollar}" width="8" height="8"/> 
+                            </apex:variable> {!PackingInsuranceFright} </b></center> 
+                    </div>
+                </td>
+            </tr>
+            
+            <tr>
+                <td colspan="6" style="font-family: Arial Unicode MS Bold;font-size: 8pt;background:#d8d8d8;padding-left: 5px">
+                    <div style="float:right;">
+                        <b>MATERIAL COST &nbsp;</b>
+                    </div>
+                </td>
+                <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;background:#d8d8d8;border-right: 1px solid black;border-left: 1px solid black;">
+                    <div style="float:left">
+                        <center><b></b></center> 
+                    </div>
+                </td>
+                <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;background:#d8d8d8;">
+                    <div style="float:right">
+                        <center ><b> <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'INR'}" var="a" value="a">
+                                <apex:image url="{!$Resource.IndianCurrencySymbol}" width="10" height="10"/> 
+                            </apex:variable>
+                            <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'USD'}" var="a" value="a">
+                                <apex:image url="{!$Resource.Dollar}" width="8" height="8"/> 
+                            </apex:variable>{!totalPriceWithPacking}</b></center> 
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" style="font-family: Arial Unicode MS Bold;font-size: 8pt;">
+                    <div style="float:right;">
+                        <b>CGST&nbsp;</b>
+                    </div>
+                </td>
+                <td colspan="2" >
+                    <div style="font-family: Arial Unicode MS Bold;font-size: 9pt;border-right: 1px solid black;border-left: 1px solid black;">
+                        <center ><b>{!syncedQuote.CGST__c}%</b></center> 
+                    </div>
+                </td>
+                <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;">
+                    <div style="float:right">
+                        <center ><b> <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'INR'}" var="a" value="a">
+                                <apex:image url="{!$Resource.IndianCurrencySymbol}" width="10" height="10"/> 
+                            </apex:variable>
+                            <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'USD'}" var="a" value="a">
+                                <apex:image url="{!$Resource.Dollar}" width="8" height="8"/> 
+                            </apex:variable> {!syncedQuote.CGST_Value__c}</b></center> 
+                    </div>
+                </td>
+                
+            </tr>
+            <tr>
+                <td colspan="6" style="font-family: Arial Unicode MS Bold;font-size: 8pt;">
+                    <div style="float:right;">
+                        <b>SGST&nbsp;</b>
+                    </div>
+                </td>
+                <td colspan="2" >
+                    <div style="font-family: Arial Unicode MS Bold;font-size: 9pt;border-right: 1px solid black;border-left: 1px solid black;">
+                        <center ><b>{!syncedQuote.SGST__c}%</b></center> 
+                    </div>
+                </td>
+                <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;">
+                    <div style="float:right">
+                        <center ><b> <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'INR'}" var="a" value="a">
+                                <apex:image url="{!$Resource.IndianCurrencySymbol}" width="10" height="10"/> 
+                            </apex:variable>
+                            <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'USD'}" var="a" value="a">
+                                <apex:image url="{!$Resource.Dollar}" width="8" height="8"/> 
+                            </apex:variable> {!syncedQuote.SGST_Value__c}</b></center> 
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" style="font-family: Arial Unicode MS Bold;font-size: 8pt;">
+                    <div style="float:right;">
+                        <b>IGST&nbsp;</b>
+                    </div>
+                </td>
+                <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;border-right: 1px solid black;border-left: 1px solid black;">
+                    <div>
+                        <center ><b>{!syncedQuote.IGST__c}% </b></center> 
+                    </div>
+                </td>
+                <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 8pt;">
+                    <div style="float:right">
+                        <center ><b> <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'INR'}" var="a" value="a">
+                                <apex:image url="{!$Resource.IndianCurrencySymbol}" width="10" height="10"/> 
+                            </apex:variable>
+                            <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'USD'}" var="a" value="a">
+                                <apex:image url="{!$Resource.Dollar}" width="8" height="8"/> 
+                            </apex:variable>{!syncedQuote.IGST_Value__c}</b></center> 
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" style="font-family: Arial Unicode MS Bold;font-size: 10pt;background:#d8d8d8;border: 1px solid black;">
+                    <div style="float:right;">
+                        <b>TOTAL PRICE WITH TAX&nbsp;</b>
+                    </div>
+                </td>
+                <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;background:#d8d8d8;border-right: 1px solid black;border-left: 1px solid black;">
+                    <div style="float:left">
+                        <center ><b></b></center> 
+                    </div>
+                </td>
+                <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 10pt;background:#d8d8d8;">
+                    <div style="float:right">
+                        <center ><b> <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'INR'}" var="a" value="a">
+                                <apex:image url="{!$Resource.IndianCurrencySymbol}" width="10" height="10"/> 
+                            </apex:variable>
+                            <apex:variable rendered="{!syncedQuote.Opportunity.CurrencyIsoCode == 'USD'}" var="a" value="a">
+                                <apex:image url="{!$Resource.Dollar}" width="8" height="8"/> 
+                            </apex:variable> {!priceWithAllTaxes}</b></center> 
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table style="table-layout: fixed;page-break-inside:avoid;">
+            <tr style="border-collapse: collapse">
+                <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;border-collapse: collapse;background:#d8d8d8;">
+                    
+                    <p style="padding:2px !important;">
+                        <b>BANK DETAILS : </b>
+                    </p>
+                </td>
+            </tr>
+            <tr style="border-collapse: collapse;">
+                <td style="font-family: Arial Unicode MS;font-size: 8pt;border-collapse: collapse;width:50%;padding:5px !important;">
+                    <p>
+                    BANK NAME : {!bankDetails.BANK_NAME__c} <br/>          
+                    BRANCH : {!bankDetails.BRANCH__c}  <br/>    
+                    Account No : {!bankDetails.Account_No__c}<br/>   
+                    Account Name : {!bankDetails.Account_Name__c}<br/>
+                    RTGS : {!bankDetails.RTGS__c}<br/>
+                    Swift Code : {!bankDetails.Swift_Code__c}<br/>            
+                    MICR Code : {!bankDetails.MICR_Code__c} <br/>            
+                        Bank AD Code : {!bankDetails.Bank_AD_Code__c}<br/>   </p>
+                </td>
+                <td style="font-family: Arial Unicode MS;font-size: 8pt;border-collapse: collapse;padding:5px !important;">
+                    
+                    <p>GST No. : {!bankDetails.GST_No__c}<br/>      
+                    PAN No. : {!bankDetails.PAN_No__c}<br/>      
+                    IEC No : {!bankDetails.IEC_No__c}<br/>     
+                    SSI : {!bankDetails.SSI__c}<br/>      
+                    UDYOG AADHAR: {!bankDetails.UDYOG_AADHAR__c} 
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                    </p> 
+                </td>
+            </tr>
+            <tr style="border-collapse: collapse">
+                <td colspan="2" style="font-family: Arial Unicode MS Bold;font-size: 9pt;border-collapse: collapse;background:#d8d8d8;">
+                    <p style="padding:2px !important;">
+                        <b>TERMS &#38; CONDITIONS </b>
+                    </p>
+                </td>
+            </tr>
+            <tr style="border-bottom: none !important;border-collapse: collapse;page-break-inside:avoid;">
+                <td style="font-family: Arial Unicode MS;font-size: 8pt;border-bottom: none !important;" colspan="1">
+                    <p style="padding:2px !important;padding-left:5px !important;">
+                        Prices : {!syncedQuote.Prices__c}<br/> 
+                        Delivery Period : {!syncedQuote.Delivery_Terms__c}<br/>  
+                        Payment Terms : {!syncedQuote.Payment_Terms__c}<br/>               
+                        P &amp; F : {!syncedQuote.Extra_P_F__c}<br/>                  
+                        GST : {!syncedQuote.Extra_GST__c}   <br/>                        
+                        Freight &amp; Insurance : {!syncedQuote.Freight_Insurance__c} <br/>     
+                        Validity : {!syncedQuote.Validity__c} Days<br/>
+                        Warranty : {!syncedQuote.Warranty__c}
+                    </p>
+                </td>
+                
+                <td colspan="1" style="padding:0px !important;border-collapse: collapse">
+                    <br/>
+                    <!--<b style="font-size: 9pt;text-align:right;border-collapse: collapse">  
+                        <center>[Required with Seal &#38; Sign]</center>
+                    </b>-->
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<apex:image id="theImage" value="{!$Resource.DRSSignature}" width="180" height="115"/>
+                    
+                    <p style="font-size: 12pt;border: 1.7px solid black;text-align:center;border-collapse: collapse;padding-top:0px;">
+                        <b>DEVDAS SHETTY [ C.E.O ]<br/>
+                            CELL NO. 0091 9845018216</b>
+                    </p>  
+                    
+                </td>
+            </tr>
+            </table>
+            <table>
+            <tr style="border-collapse: collapse">
+                <td colspan="2" style="border-top: 1.5px solid black;font-family: Arial MS;font-size: 8pt;border-collapse:collapse;page-break-inside:avoid;">
+                    
+                    <center>
+                        <p>
+                        <b>
+                            UNIT - 2 / Factory : GAT NO.94/2, Plot No.1, Alandi Markal Road ,Village Dhanore  TAL-Khed,Pune - 412105, Maharashtra<br/>
+                            Email: sude.pune@gmail.com Contact : 9028219202 / 9763719688 / 9822980003 </b>
+                        </p>
+                    </center>
+                    
+                </td>
+            </tr>
+            <tr style="border-collapse: collapse">
+                <td colspan="2" style="border-top: 1.5px solid black;font-family: Arial MS;font-size: 8pt;border-collapse: collapse;padding:1px;">
+                    <center><b style="font-size: 10pt;">
+                        <u>SHORT INTRODUCTION</u>
+                        </b></center>
+                    <p style="text-align: justify;text-justify: inter-word;">
+                        We are one of the most popular Automated Damper and valve manufacturers in India and we have All range of automated dampers / Valves
+                        [Electrical/Pneumatic/Electro Hydraulic] and we have supplied to various organisations whose performance has made our customers to repeat the ordering of
+                        similar Dampers once again on us.We have our supply at Nuclear station Plus ISRO and all over INDIA and our Neighbouring Countries like Bangladesh ,Nepal ,
+                        Srilanka , Myanmar and Middle east through OEM's Like THERMAX LIMITED , FORBESMARSHALL PVT.LTD.,VOLTAS LIMITED, ENMAX ENGINEERING INDIA P
+                        LTD., WALCHANDNAGAR INDUSTRIES LTD. ETC.
+                    </p><p>
+                    <b style="font-size: 9pt;"><u>CERTIFICATIONS:</u></b><br/>
+                    # ISO 9001<br/>
+                    # IBR APPROVED FACTORY<br/>
+                    # GREEN CHANNEL PARTNERS FOR THERMAX LTD.<br/>
+                    # NSIC<br/>
+                    # MSMED<br/>
+                    # SOLIDWORKS<br/>
+                    Visit our website: www.sudeengg.com &#38; www.sdtork.com, from one corner to the other, find out your interest and kindly fill up your requirement details on
+                    the Quotation request form, send it to us, we are somebody will be in touch with you personally or we will submit our proposal through e-mail immediately.
+                    </p>
+                </td>
+            </tr>
+            <tr style="border-collapse: collapse">
+                <td colspan="2" style="border-top: 1.5px solid black;font-family: Arial MS;font-size: 8pt;border-collapse: collapse;padding:1px;">
+                    <center><b style="font-size: 10pt;">
+                        <u>DETAIL INTRODUCTION</u>
+                        </b></center>
+                    <p>
+                        We at SUDE Bangalore since its establishment in 1989 are positioning ourselves as a ‘Specialized Company for Automated valves’ used in Process Industries and also required in all sectors of Industries in the world. Since its foundation by the undersigned in 1989 SUDE has
+                        developed with his vision who is a technocrat in Valve Automation Industry and initially started with smaller automation and later on
+                        turned to be a System Integrator in Valve Industry along with the manufacturing of Dampers [from smallest to heavy duty] having a SSI
+                        unit at Pune, Electrical Actuator under the brand name of Sdtork also located at Pune and Basis Weight valve under the brand name of
+                        Kriss Instrumentation located in Bangalore.<br/>
+                        We try to maximize the customer satisfaction on the stand point of our customers, by corresponding to demands from various customers
+                        and developing application. It creates means of offering the stable product, flexible service to adapt and exceed our customer’s demand.
+                        SUDE, a people company, we don’t just sell product; we sell technology and the value addition to the end user. We can also design valves
+                        known as ‘Custom Made Valves’ to meet customer specific requirement and operation parameters.<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The essential business of SUDE is in Valve Automation and distribution of Fluid flow control equipment. SUDE has also realized
+                        that one of the most important keys to meeting customer needs is a comprehensive offering of Valves and Actuation to service the ever
+                        increasing demand for ‘Automated Process Control’, ‘Dedicated to support the customers valve automation needs’ – from technical
+                        assistance in the specification phase, through manufacturing and testing and to on time delivery. <br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Our philosophy as a company has been always distinguished by the quality of our products and the service to our customers i.e by
+                        combining high quality products, field and design experience, SUDE is able to satisfy all the customers and market expectations by
+                        offering reliable, flexible and customized solutions together with a qualified service.<br/>
+                        We are specialized in the following type of products which are as stated below. <br/>
+                        1. 1162/1181F/1181H/1182B/1182D/1181B/1181D/-SERIES Solenoid Valves &#38; Angle Valves -2 Way, 3 Way &#38; 4 Way<br/>
+                        2. DA/SA-SERIES Pneumatic Actuators.<br/>
+                        3. 1900-SERIES Dampers with Pneumatic and Electrical Actuators.<br/>
+                        5. 1362/1363/1352/1353-SERIES Ball Valves with Pneumatic &#38; Electric Actuators.<br/>
+                        6. 1800-SERIES Flush Bottom Valves With Pneumatic &#38; Electric Actuators.<br/>
+                        7. 1750/1760-SERIES Control Valves with Pneumatic &#38; Electric Actuators.<br/>
+                        8. 1258/1268-1358/1368-SERIES Industrial Plastic Butterfly &#38; Ball Valves With
+                        Pneumatic and Electric Actuators.
+                        9. 1450/1460-SERIES Plug Valve with Pneumatic &#38; Electric Actuators.<br/>
+                        10.1600-SERIES Knife Edge Gate Valve with Pneumatic, Hydraulic &#38; Electrical Actuators.<br/>
+                        11. 9650/9660/9670-SERIES Sluice / Gate Valve With Pneumatic, Hydraulic and Electrical Actuators.<br/>
+                        12. 1257/1267/1357/1367-SERIES Zero Bacteria Food Grade Ball &#38; Butterfly Valves with Pneumatic &#38; Electric Actuators.<br/>
+                        13. 9750/9760-P&#38;B SERIES Bellow Sealed &#38; Piston Valve with Diaphragm &#38; Electric Actuator.<br/>
+                        14. 1250/1260-SERIES Industrial Butterfly Valves with Pneumatic &#38; Electric Actuators.<br/>
+                        15. 9800-SERIES Plastic Diaphragm Valves with Pneumatic &#38; Electric Actuators.<br/>
+                        16. 1100-SERIES Power Cylinder.<br/>
+                        17. 1560-SERIES Dilution Valve with Pneumatic Actuators.<br/>
+                        18. 1850/1860-SERIES Pneumatic/Electric Weir Type Lined and Unlined Diaphragm Valves.<br/>
+                        19. 1254/1754-SERIES Motorized Combination Valves.<br/>
+                        Further to the above if required we can submit the following documents:<br/>
+                        1. Individual catalogues on all above said Products.<br/>
+                        2. Cliental List i.e. Purchase Order copies which will speak for our credential and identity of our company in various Projects / Industries
+                        for various items.<br/>
+                        3. Approved drawings and Inspection Reports – which confirms our products have been approved by TATA Project, EIL, UDHE India, L &#38;
+                        T, SGS Technologies, Vedanta Aluminum, Hindustan Zinc and many more.<br/>
+                        4. Service / MOM Report – which will speak for our after sales service.<br/>
+                        5. QAP / Approved Vendor Forms.<br/>
+                        Further to the above this is to your information we have another associate M/s. Sdtork Controls Pvt. Ltd. situated in Pune who is
+                        manufacturing Electrical actuators from smallest to biggest range right from 10 NM to 90000 NM Torque which is a huge range for any
+                        actuator manufacturer in the world. Sdtork has also technical tie up with European based companies and they are in touch with Water
+                        Industries to greater depth for Atomizing Sluice Valves, Gate valves or any type of valves which need Automation and we proudly
+                        announce Sdtork is a ‘WATER SAVER’ in India which gives a big satisfaction towards the work and also a huge contribution towards
+                        healthy shining India. Following are the list of their products; please let us know if they are of any interest to you.<br/>
+                        1000-SERIES Single phase quarter turn Electrical Actuator<br/>
+                        2000-SERIES Single phase linear Electrical Actuator<br/>
+                        3000-SERIES three phase multi-turn rotary Electrical Actuator with / without integral starter available in IP55, IP65, IP67 &#38; FLP protections<br/>
+                        4000-SERIES three phase quarter-turn rotary Electrical Actuator with/without integral starter available in IP55, IP65, IP67 &#38; FLP protections<br/>
+                        5000-SERIES three phase quarter-turn rotary Electrical Actuator with linkages for damper application with/without integral starter
+                        available in IP55, IP65, IP67 &#38; FLP protections<br/>
+                        6000-SERIES three phase linear Electrical Actuator for control valve with / without integral starter available in IP55, IP65, IP67 &#38; FLP
+                        protections<br/>
+                        7000-SERIES three phase linear cylinder actuator (Thruster) with different strokes for material handling, coal handling &#38; related
+                        applications<br/>
+                        Single phase damper actuator<br/>
+                        Three phase multi-turn rotary Electrical Actuator with spur gear combination<br/>
+                        Three phase quarter-turn rotary Electrical Actuator with worm gear combination<br/>
+                        Wall / Panel mounted control panel / customized control panel<br/>
+                        Actuator mounted valve positioner<br/>
+                        Servo controller, wall / panel mounted<br/>
+                        Position transmitter<br/>
+                        Position transmitter with linkage &#38; mounting for linear / rotary stroke<br/>
+                        Manual push button controller, wall / panel mounting type<br/>
+                        Digital position indicator<br/>
+                        Signal multiplier<br/>
+                        4-20 mA source generators<br/>
+                        PID controller. Complete pressure control loop<br/>
+                        Complete temperature control loop<br/>
+                        Complete flow control loop<br/>
+                        Sdtork provides solutions for complete valve automation<br/>
+                        Another associate company KRISS Instrumentation since its establishment in 1993 is involved mainly in manufacturing / supply of 1550-
+                        SERIES Basis weight valve used in Paper Industry for GSM Control application which helps to accomplish greater accuracy with weight
+                        and thickness of the paper. The basis weight valves made by Kriss are used in Indian Paper Industries as the direct import substitute
+                        items. Cost wise they are almost half of the imported products and maintenance and quality wise on par to the imported products, in fact
+                        we proudly announce Kriss Instrumentation is a saver of foreign currency in India. The credential list along with Catalogue of Kriss and
+                        Sdtork can be submitted on request.<br/>
+                        &nbsp;Thus the creation of SUDE Unit II at Pune and our associate Kriss Instrumentation - Bangalore &#38; Sdtork Controls - Pune further reinforces
+                        our commitment to remain the leader in Automated Valves, Electrical Actuator, Damper Automation and control of fluid process systems.<br/>
+                        &nbsp;Growth is an indication of success and continued relevance. At SUDE the last two decades have been an exciting journey of Learning,
+                        Innovation and Growth. SUDE has dealt with several differentiated products that were conceived through integration with customers and
+                        subsequently commissioned successfully on field.<br/>
+                        After going above information you will know how much we are involved ourselves towards 'Valve Automation / System Integration in
+                        Process Industries', requesting you to give us an opportunity to explore our knowledge to the betterness at your Industries. <br/>
+                        You will find various series highlighted above in bolted letter from Valves to different types of Actuators, please visit our website:
+                        www.sudeengg.com &#38; www.sdtork.com, from one corner to the other, find out your interest and kindly fill up your requirement details
+                        on the Quotation request form, send it to us, we are somebody will be in touch with you personally or we will submit our proposal
+                        through e-mail immediately.<br/><br/><br/>
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </div>
+</apex:page>

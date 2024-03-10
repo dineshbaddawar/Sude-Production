@@ -1,0 +1,233 @@
+<apex:page setup="false" sidebar="false" renderAs="pdf"  showHeader="false" standardController="OpportunityLineItem" extensions="MapTechnicalDocumentApexClass" applyHtmlTag="false" applyBodyTag="false">
+    <head>
+        <style>
+            @page {
+            margin-top: 0cm;
+            background-image: url('https://sudeengg--util--c.sandbox.vf.force.com/resource/1673873517000/Watermark?');
+            background-repeat: no-repeat;
+            background-position: center;
+            @bottom-left {
+            content: element(footer);
+            }
+            }
+            div.footer {
+            display: block;
+            padding: 5px;
+            position: running(footer);
+            }
+            .pagenumber:before {
+            content: counter(page);
+            }
+            .pagecount:before {
+            content: counter(pages);
+            }
+            .flex-container {
+            display: flex;
+            background-color: DodgerBlue;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="footer" style="margin-left: auto;margin-right: auto;">
+            <hr style="border-top: 1px solid #20B2AA;" />
+            <div class="number" Style="float:right;font-size:15px;">Page <span class="pagenumber"/> of <span class="pagecount"/></div>
+        </div>
+         <header >
+            
+        </header> 
+        <div class="content">
+            <div style="display: inline-block;width: 100%;margin: 1rem;padding: 2rem 2rem;padding-top:10px;font-family: Noto Sans,Helvetica,sans-serif">
+                <!--apex:image value="https://cmenvirosystems--cmedev.sandbox.my.salesforce.com/sfc/servlet.shepherd/version/renditionDownload?rendition=ORIGINAL_Png&versionId=0685j000007gufR&operationContext=CHATTER&contentId=05T5j00000Hz5kT" style="float:right;height:75px;" /-->
+                <div style="float:right;">
+                    <apex:image url="{!$Resource.SudeImage}" width="120" height="60" /><br/>   
+                </div>
+                <div style="display: inline-block;padding: 2rem 2rem;vertical-align: middle;float:left;width:50%;color:#13928d;font-size:20px;">
+                    <b style="font-size: 28px;color : #606060;" >Technical Data Sheet </b>  
+                </div>
+            </div>
+            <div style="display: inline-block;width: 100%;margin: 1rem;padding: 2rem 2rem;padding-top:7px;font-family: Noto Sans,Helvetica,sans-serif;">
+                <div style="display: inline-block;padding: 2rem 2rem;vertical-align: middle;float:left;width:50%">
+                    <span>
+                        <b>Date 	:</b> 
+                        <apex:outputText value="{0,date,dd' 'MMMMM' 'yyyy}">
+                            <apex:param value="{!CurrentDate}"  /> 
+                        </apex:outputText><br/>
+                        <b>Phone	: </b>{!CompanyInfo.CMP_Phone__c}<br/>
+                        <b>Cell No		: </b>{!CompanyInfo.TechPhone__c}<br/>
+                        <b>E-mail	:</b> sudeengg@gmail.com<br/>
+                        <b>Website 	:</b> {!CompanyInfo.CMP_Website__c}
+                    </span>
+                </div>
+                <div style="display: inline-block;padding: 2rem 2rem;vertical-align: middle;float:right;">
+                    <b Style="font-size:18px;">M/S Sude Engineering Private Limited</b><br/>
+                    <br/>
+                    <span>
+                        Plot Number 67  &amp; 68,<br/>  
+                        Near Government ITI College, Magadi Road,<br/>
+                        Seegehalli, BMTC Depot Road,<br/>
+                        Bangalore - 560112
+                    </span>
+                </div>
+            </div>
+            
+            <div style="margin-top:20px;font-family: Noto Sans,Helvetica,sans-serif;">
+                <table   style="width: 100%;border: 1px solid #20B2AA; border-spacing: 10px;">
+                    <tr style="width: 100%;">
+                        <apex:outputText rendered="{!OppLineItemRec.Opportunity.SyncedQuote.Name !=null }">
+                            <td style="height:25px;font-size:15px;width:25%">Quotation Refer No</td>
+                            <td style="font-size:12px;width:75%;background-color:#d1e0df;">{!OppLineItemRec.Opportunity.SyncedQuote.Name}</td>
+                        </apex:outputText>
+                    </tr>
+                    <tr  style="width: 100%;">
+                        <apex:outputText rendered="{!OppLineItemRec.Opportunity.Account.Name !=null }">
+                            <td style="font-size:15px;width:25%">Company Name</td>
+                            <td style="font-size:12px;width:75%;background-color:#d1e0df;">{!OppLineItemRec.Opportunity.Account.Name}</td>
+                        </apex:outputText>
+                    </tr>
+                    <tr>
+                        <apex:outputText rendered="{!OppLineItemRec.Opportunity.SyncedQuote.QuoteNumber !=null }">
+                            <td style="height:25px;border-radius:5px;font-size:15px;width:25%">Client Refer No</td>
+                            <td style="font-size:12px;background-color:#d1e0df;width:75%">{!OppLineItemRec.Opportunity.SyncedQuote.QuoteNumber}</td>
+                        </apex:outputText>
+                    </tr> 
+                    <tr>
+                        <apex:outputText rendered="{!OppLineItemRec.Opportunity.Actuator_Motor__c !=null }">
+                            <td style="font-size:15px;width:25%">Enquiry No.</td>
+                            <td style="font-size:12px;background-color:#d1e0df;width:75%">{!OppLineItemRec.Opportunity.Actuator_Motor__c}</td>
+                        </apex:outputText>
+                    </tr>
+                    <tr>
+                        <apex:outputText rendered="{!CurrentDate !=null }">
+                            <td style="height:25px;border-radius:5px;font-size:15px;width:25%">Date</td>
+                            <td style="font-size:12px;background-color:#d1e0df;width:75%">
+                                <apex:outputText value="{0,date,dd' 'MMMMM' 'yyyy}" >
+                                    <apex:param value="{!CurrentDate}"  /> 
+                                </apex:outputText>
+                            </td>
+                        </apex:outputText>
+                    </tr> 
+                </table>
+            </div>
+            
+            <!--for loop stat!--> 
+            <p style="color:#20B2AA;text-align:center;font-size: 13px;font-weight:bold">
+                <b>GENERAL INFORMATION</b>
+            </p>
+            <div class="flex-container" style="border: 1px solid #20B2AA;font-family: Noto Sans,Helvetica,sans-serif; display: inline-block;width:100%">
+                
+                <table style="width: 100%; border-spacing: 10px;">
+                    
+                       <apex:outputText rendered="{!oppLineRecordDetails.Product2.Product_Name__c !=null }">
+                        <tr>
+                            <td style="height:25px;border-radius:5px;font-size:15px;width:25%;">Model Number</td>
+                            <td colspan="3" style="font-size:12px;background-color:#d1e0df;width:75%;white-space: normal;overflow-wrap: break-word;">{!oppLineRecordDetails.Product2.Product_Name__c}</td>
+                        </tr>
+                    </apex:outputText>
+                    
+                      <apex:outputText rendered="{!oppLineRecordDetails.Product2.HSN_Code__c !=null }">
+                    <tr>
+                        <td style="height:25px;border-radius:5px;font-size:15px;width:25%;">HSN Code</td>
+                        <td colspan="3" style="font-size:12px;background-color:#d1e0df;width:75%;">{!oppLineRecordDetails.Product2.HSN_Code__c}</td>
+                    </tr>
+                    </apex:outputText>
+                    
+                    <apex:outputText rendered="{!oppLineRecordDetails.Product2.Name !=null }">
+                        <tr>
+                            <td style="height:25px;border-radius:5px;font-size:15px;width:25%;">Product Name</td>
+                            <td colspan="3" style="font-size:12px;background-color:#d1e0df;width:75%;">{!oppLineRecordDetails.Product2.Name}</td>
+                        </tr>
+                    </apex:outputText>
+                    
+                    <apex:outputText rendered="{!oppLineRecordDetails.Product2.Family !=null }">
+                        <tr>
+                            <td style="height:25px;border-radius:5px;font-size:15px;width:25%;">Product Family</td>
+                            <td colspan="3" style="font-size:12px;background-color:#d1e0df;width:75%;">{!oppLineRecordDetails.Product2.Family}</td>
+                        </tr>
+                    </apex:outputText>
+                    
+                    <apex:outputText rendered="{!oppLineRecordDetails.Product2.Series_Name__c !=null }">
+                        <tr>
+                            <td style="height:25px;border-radius:5px;font-size:15px;width:25%;">Series Name</td>
+                            <td colspan="3" style="font-size:12px;background-color:#d1e0df;width:75%;">{!oppLineRecordDetails.Product2.Series_Name__c}</td>
+                        </tr>
+                    </apex:outputText>
+                    
+                     <!--apex:outputText rendered="{!oppLineRecordDetails.Product2.Characteristic__c !=null }">
+                        <tr>
+                            <td style="height:25px;border-radius:5px;font-size:15px;width:25%;">Characteristic</td>
+                            <td colspan="3" style="font-size:12px;background-color:#d1e0df;width:75%;">{!oppLineRecordDetails.Product2.Characteristic__c}</td>
+                        </tr>
+                    </apex:outputText-->
+                    
+                     <!--apex:outputText rendered="{!oppLineRecordDetails.Product2.Mode_of_Operation__c !=null }">
+                        <tr>
+                            <td style="height:25px;border-radius:5px;font-size:15px;width:25%;">Mode of Operation</td>
+                            <td colspan="3" style="font-size:12px;background-color:#d1e0df;width:75%;">{!oppLineRecordDetails.Product2.Mode_of_Operation__c}</td>
+                        </tr>
+                    </apex:outputText-->
+                    
+                    <apex:outputText rendered="{!AND(oppLineRecordDetails.Product2.Valve_Size__c !=null , GeneralInfoFor_1100_1952 == false) }">
+                    <tr>
+                        <td style="height:25px;border-radius:5px;font-size:15px;width:25%;">Valve Size</td>
+                        <td colspan="3" style="font-size:12px;background-color:#d1e0df;width:75%;">{!oppLineRecordDetails.Product2.Valve_Size__c}</td>
+                    </tr>
+                     </apex:outputText>
+                    
+                      <apex:outputText rendered="{!AND(oppLineRecordDetails.Product2.Valve_Size_Unit__c !=null, GeneralInfoFor_1100_1952 == false) }">
+                    <tr>
+                        <td style="height:25px;border-radius:5px;font-size:15px;width:25%;">Valve Size Unit</td>
+                        <td colspan="3" style="font-size:12px;background-color:#d1e0df;width:75%;">{!oppLineRecordDetails.Product2.Valve_Size_Unit__c}</td>
+                    </tr>
+                     </apex:outputText>
+                   
+                     <apex:outputText rendered="{!oppLineRecordDetails.Quantity !=null }">
+                    <tr>
+                        <td style="height:25px;border-radius:5px;font-size:15px;width:25%;">Qty</td>
+                        <td colspan="3" style="font-size:12px;background-color:#d1e0df;width:75%;">{!TEXT(oppLineRecordDetails.Quantity)}</td>
+                    </tr>
+                    </apex:outputText>
+                     
+                </table>
+            </div>
+            
+           
+            
+            <apex:repeat value="{!SectionNameWithFieldandValue}" var="secName">
+                <p style="color:#20B2AA;text-align:center;font-size: 13px;font-weight:bold">
+                    <b style="color:#20B2AA;text-align:center;font-size: 13px;font-weight:bold"><apex:outputText value="{!RIGHT(secName, LEN(secName)-1)}" /> </b>
+                </p>
+                <div style="border: 1px solid #20B2AA;font-family: Noto Sans,Helvetica,sans-serif;-fs-table-paginate: paginate">
+                    <table style="width: 100%; border-spacing: 10px;-fs-table-paginate: paginate">
+                        <apex:repeat value="{!SectionNameWithFieldandValue[secName]}" var="innerKey" >
+                            <apex:outputText rendered="{!innerKey.value !=null }">
+                            <tr>
+                                <td style="height:25px;border-radius:5px;font-size:15px; width: 25%;">{!innerKey.lable}</td>
+                                <td style="font-size:12px;background-color:#d1e0df;width:75%;">{!innerKey.value}</td>
+                            </tr>
+                                 </apex:outputText>
+                        </apex:repeat>
+                    </table>
+                </div>                
+            </apex:repeat>
+            
+            <br/> 
+            <br/>
+            <br/>
+            <div>
+                <p style="color:#20B2AA;text-align:center;font-size: 20px;font-family: Noto Sans,Helvetica,sans-serif;">
+                    <b>THANK YOU </b> 
+                </p>
+                <br/> <br/>
+                <Span style="font-weight: bold;font-size: 17px;font-family: Noto Sans,Helvetica,sans-serif;">From</Span><br/>
+                <span style="font-size: 17px;font-family: Noto Sans,Helvetica,sans-serif;">{!CompanyInfo.Name_Comp__c}<br/>
+                    {!CompanyInfo.Designation__c}<br/>
+                    Cell No. {!CompanyInfo.Cell_No__c}<br/>
+                    {!CompanyInfo.Company_Name__c} <br/>
+                </span> 
+            </div>  
+            
+        </div>
+    </body>
+    
+    
+</apex:page>
